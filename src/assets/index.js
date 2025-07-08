@@ -41,7 +41,6 @@ import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
 
 import burpsuite from "./tech/burpsuite_logo.png"
-import fastapi from "./tech/fastapi.png"
 
 
 export {
@@ -81,6 +80,5 @@ export {
   petmitra,
   kartik_buddo,
   network_intrusion,
-  fastapi,
   burpsuite,
 };
