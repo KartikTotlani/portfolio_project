@@ -41,7 +41,6 @@ import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
 
 import burpsuite from "./tech/burpsuite_logo.png"
-import cplus from "./tech/cplus.png"
 import confluence from "./tech/confluence.png"
 import elastic_search from "./tech/elastic_search.png"
 import fastapi from "./tech/fastapi.png"
@@ -86,7 +85,6 @@ export {
   network_intrusion,
   fastapi,
   confluence,
-  cplus,
   burpsuite,
   elastic_search,
 };
