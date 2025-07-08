@@ -26,10 +26,7 @@ import {
   network_intrusion,
   petmitra,
   kartik_buddo,
-  elastic_search,
   burpsuite,
-  fastapi,
-  confluence,
 } from "../assets";
 
 export const navLinks = [

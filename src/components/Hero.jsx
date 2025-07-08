@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { styles } from "../styles";
+import React, { Suspense } from "react";
 // import { ComputersCanvas } from "./canvas";
-import ARVREmbedCanvas from "./canvas/ARVREmbedCanvas";
+const ARVREmbedCanvas = React.lazy(() =>
+  import("./canvas/ARVREmbedCanvas")
+);
 
 const Hero = () => {
   return (
@@ -29,7 +32,9 @@ const Hero = () => {
 
       {/* 🔄 ARVR Canvas Background */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        <ARVREmbedCanvas />
+        <Suspense fallback={<div className="text-white">Loading 3D...</div>}>
+          <ARVREmbedCanvas />
+        </Suspense>
       </div>
 
       <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">

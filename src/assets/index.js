@@ -42,7 +42,6 @@ import tripguide from "./tripguide.png";
 
 import burpsuite from "./tech/burpsuite_logo.png"
 
-
 export {
   KT_sign,
   logo,
