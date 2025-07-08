@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
 import { styles } from "../styles";
-import React, { Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import ErrorBoundary from "./ErrorBoundary";
 import fallbackImage_1 from "../assets/kt_gdgc_photo.png";
 // import { ComputersCanvas } from "./canvas";
 const ARVREmbedCanvas = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
 
-const isMobile = () => {
-  if (typeof navigator === "undefined") return false;
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-};
-
 const Hero = () => {
+   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof navigator !== "undefined") {
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
+    }
+  }, []);
+
   return (
     <section className={`relative w-full h-screen mx-auto`}>
       <div
@@ -37,7 +41,7 @@ const Hero = () => {
 
       {/* 🔄 ARVR Canvas Background */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        {isMobile() ? (
+        {isMobile ? (
           <img
             src={fallbackImage_1}
             alt="3D model preview"

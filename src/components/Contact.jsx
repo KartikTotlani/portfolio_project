@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { Suspense } from "react";
+import { useEffect } from "react";
 import { styles } from "../styles";
 import { EarthCanvas } from "./canvas";
 import ErrorBoundary from "./ErrorBoundary";
@@ -11,13 +12,15 @@ const AvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 
-const isMobile = () => {
-  if (typeof navigator === "undefined") return false;
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-};
-
-
 const Contact = () => {
+   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof navigator !== "undefined") {
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
+    }
+  }, []);
   const formRef = useRef();
   const [form, setForm] = useState({
     name: "",
@@ -140,7 +143,7 @@ const Contact = () => {
         {/*<AvatarCanvas />*/}
 
         <div className="absolute bottom-0 right-0 w-[500px] h-[420px]">
-          {isMobile() ? (
+          {isMobile ? (
           <img
             src={fallbackImage_2}
             alt="3D model preview"
