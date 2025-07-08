@@ -4,6 +4,7 @@ import emailjs from "@emailjs/browser";
 import { Suspense } from "react";
 import { styles } from "../styles";
 import { EarthCanvas } from "./canvas";
+import ErrorBoundary from "./ErrorBoundary";
 //import AvatarCanvas from "./canvas/AvatarCanvas";
 const AvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 import { SectionWrapper } from "../hoc";
@@ -133,9 +134,17 @@ const Contact = () => {
 
         {/* 🔄 ARVR Canvas Background */}
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-          <Suspense fallback={<div className="text-white">Loading 3D...</div>}>
-            <AvatarCanvas />
-          </Suspense>{" "}
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="text-white w-full h-full flex justify-center items-center">
+                  Loading 3D...
+                </div>
+              }
+            >
+              <AvatarCanvas />
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </motion.div>
     </div>
