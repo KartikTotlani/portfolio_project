@@ -5,10 +5,17 @@ import { Suspense } from "react";
 import { styles } from "../styles";
 import { EarthCanvas } from "./canvas";
 import ErrorBoundary from "./ErrorBoundary";
+import fallbackImage_2 from "../assets/arvr_kt.png";
 //import AvatarCanvas from "./canvas/AvatarCanvas";
 const AvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+
+const isMobile = () => {
+  if (typeof navigator === "undefined") return false;
+  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
+
 
 const Contact = () => {
   const formRef = useRef();
@@ -130,14 +137,20 @@ const Contact = () => {
         variants={slideIn("right", "tween", 0.2, 1)}
         className="xl:flex-1 xl:h-auto md:h-[550px] h-[350px]"
       >
-        {/*<EarthCanvas />*/}
+        {/*<AvatarCanvas />*/}
 
-        {/* 🔄 ARVR Canvas Background */}
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
+        <div className="absolute bottom-0 right-0 w-[500px] h-[420px]">
+          {isMobile() ? (
+          <img
+            src={fallbackImage_2}
+            alt="3D model preview"
+            className="w-full h-full object-contain mix-blend-normal opacity-90"
+          />
+        ) : (
           <ErrorBoundary>
             <Suspense
               fallback={
-                <div className="text-white w-full h-full flex justify-center items-center">
+                <div className="text-white flex justify-center items-center h-full w-full">
                   Loading 3D...
                 </div>
               }
@@ -145,6 +158,7 @@ const Contact = () => {
               <AvatarCanvas />
             </Suspense>
           </ErrorBoundary>
+        )}
         </div>
       </motion.div>
     </div>

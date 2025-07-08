@@ -2,8 +2,14 @@ import { motion } from "framer-motion";
 import { styles } from "../styles";
 import React, { Suspense } from "react";
 import ErrorBoundary from "./ErrorBoundary";
+import fallbackImage_1 from "../assets/kt_gdgc_photo.png";
 // import { ComputersCanvas } from "./canvas";
 const ARVREmbedCanvas = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
+
+const isMobile = () => {
+  if (typeof navigator === "undefined") return false;
+  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
 
 const Hero = () => {
   return (
@@ -31,17 +37,25 @@ const Hero = () => {
 
       {/* 🔄 ARVR Canvas Background */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        <ErrorBoundary>
-          <Suspense
-            fallback={
-              <div className="text-white w-full h-full flex justify-center items-center">
-                Loading 3D...
-              </div>
-            }
-          >
-            <ARVREmbedCanvas />
-          </Suspense>
-        </ErrorBoundary>
+        {isMobile() ? (
+          <img
+            src={fallbackImage_1}
+            alt="3D model preview"
+            className="w-full h-full object-contain mix-blend-normal opacity-90 absolute bottom-0 left-0.5 right-0.5 bg-center"
+          />
+        ) : (
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="text-white flex justify-center items-center h-full w-full">
+                  Loading 3D...
+                </div>
+              }
+            >
+              <ARVREmbedCanvas />
+            </Suspense>
+          </ErrorBoundary>
+        )}
       </div>
 
       <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">
