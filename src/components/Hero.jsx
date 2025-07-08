@@ -3,13 +3,15 @@ import { styles } from "../styles";
 import React, { useState, useEffect, Suspense } from "react";
 import ErrorBoundary from "./ErrorBoundary";
 import fallbackImage_1 from "../assets/kt_gdgc_photo.png";
-// import { ComputersCanvas } from "./canvas";
+
 const ARVREmbedCanvas = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
 
 const Hero = () => {
-   const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
     if (typeof navigator !== "undefined") {
       const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       setIsMobile(isMobileDevice);
@@ -41,25 +43,27 @@ const Hero = () => {
 
       {/* 🔄 ARVR Canvas Background */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        {isMobile ? (
-          <img
-            src={fallbackImage_1}
-            alt="3D model preview"
-            className="w-full h-full object-contain mix-blend-normal opacity-90 absolute bottom-0 left-0.5 right-0.5 bg-center"
-          />
-        ) : (
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <div className="text-white flex justify-center items-center h-full w-full">
-                  Loading 3D...
-                </div>
-              }
-            >
-              <ARVREmbedCanvas />
-            </Suspense>
-          </ErrorBoundary>
-        )}
+        {hasMounted ? (
+          isMobile ? (
+            <img
+              src={fallbackImage_1}
+              alt="3D model preview"
+              className="w-full h-full object-contain opacity-90 mix-blend-screen"
+            />
+          ) : (
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <div className="text-white flex justify-center items-center h-full w-full">
+                    Loading 3D...
+                  </div>
+                }
+              >
+                <ARVREmbedCanvas />
+              </Suspense>
+            </ErrorBoundary>
+          )
+        ) : null}
       </div>
 
       <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">

@@ -14,8 +14,10 @@ import { slideIn } from "../utils/motion";
 
 const Contact = () => {
    const [isMobile, setIsMobile] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
     if (typeof navigator !== "undefined") {
       const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       setIsMobile(isMobileDevice);
@@ -142,14 +144,15 @@ const Contact = () => {
       >
         {/*<AvatarCanvas />*/}
 
-        <div className="absolute bottom-0 right-0 w-[500px] h-[420px]">
-          {isMobile ? (
-          <img
-            src={fallbackImage_2}
-            alt="3D model preview"
-            className="w-full h-full object-contain mix-blend-normal opacity-90"
-          />
-        ) : (
+        <div className="absolute bottom-0 right-0 w-[500px] h-[560px]">
+          {hasMounted ? (
+          isMobile ? (
+            <img
+              src={fallbackImage_1}
+              alt="3D model preview"
+              className="w-full h-full object-contain opacity-90 mix-blend-screen"
+            />
+          ) : (
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -161,7 +164,8 @@ const Contact = () => {
               <AvatarCanvas />
             </Suspense>
           </ErrorBoundary>
-        )}
+        )
+      ): null}
         </div>
       </motion.div>
     </div>
