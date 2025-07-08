@@ -28,7 +28,6 @@ import {
   kartik_buddo,
   elastic_search,
   burpsuite,
-  cplus,
   fastapi,
   confluence,
 } from "../assets";
