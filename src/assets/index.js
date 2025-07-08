@@ -1,4 +1,5 @@
 import logo from "./logo.svg";
+import KT_sign from "./KT_sign.png";
 import backend from "./backend.png";
 import creator from "./creator.png";
 import mobile from "./mobile.png";
@@ -26,11 +27,28 @@ import shopify from "./company/shopify.png";
 import starbucks from "./company/starbucks.png";
 import tesla from "./company/tesla.png";
 
+import quickheal from "./company/quickheal.png"
+import definedge from "./company/definedge.png"
+import dsc_pccoe_logo from "./company/dsc_pccoe_logo.png"
+import owasp from "./company/owasp.png"
+
+import kartik_buddo from "./tech/kartik_buddo.png"
+import network_intrusion from "./tech/network_intrusion.png"
+import petmitra from "./tech/petmitra.png"
+
 import carrent from "./carrent.png";
 import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
 
+import burpsuite from "./tech/burpsuite_logo.png"
+import cplus from "./tech/cplus.png"
+import confluence from "./tech/confluence.png"
+import elastic_search from "./tech/elastic_search.png"
+import fastapi from "./tech/fastapi.png"
+
+
 export {
+  KT_sign,
   logo,
   backend,
   creator,
@@ -52,6 +70,10 @@ export {
   tailwind,
   typescript,
   threejs,
+  quickheal,
+  definedge,
+  dsc_pccoe_logo,
+  owasp,
   meta,
   shopify,
   starbucks,
@@ -59,4 +81,12 @@ export {
   carrent,
   jobit,
   tripguide,
+  petmitra,
+  kartik_buddo,
+  network_intrusion,
+  fastapi,
+  confluence,
+  cplus,
+  burpsuite,
+  elastic_search,
 };
