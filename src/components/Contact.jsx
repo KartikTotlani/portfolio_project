@@ -148,9 +148,9 @@ const Contact = () => {
           {hasMounted ? (
           isMobile ? (
             <img
-              src={fallbackImage_1}
+              src={fallbackImage_2}
               alt="3D model preview"
-              className="w-full h-full object-contain opacity-90 mix-blend-screen"
+              className="object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 w-[500px] h-[420px]"
             />
           ) : (
           <ErrorBoundary>
