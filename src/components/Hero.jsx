@@ -11,10 +11,11 @@ const Hero = () => {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
-    if (typeof navigator !== "undefined") {
-      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      setIsMobile(isMobileDevice);
+    if (typeof window !== "undefined") {
+      setHasMounted(true);
+      const width = window.innerWidth;
+      const lowEndDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      setIsMobile(width < 768 || lowEndDevice);
     }
   }, []);
 
@@ -43,8 +44,7 @@ const Hero = () => {
 
       {/* 🔄 ARVR Canvas Background */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        {hasMounted ? (
-          isMobile ? (
+        {hasMounted && isMobile ? (
             <img
               src={fallbackImage_1}
               alt="3D model preview"
@@ -62,8 +62,7 @@ const Hero = () => {
                 <ARVREmbedCanvas />
               </Suspense>
             </ErrorBoundary>
-          )
-        ) : null}
+          )}
       </div>
 
       <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">

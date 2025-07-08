@@ -17,10 +17,11 @@ const Contact = () => {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
-    if (typeof navigator !== "undefined") {
-      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      setIsMobile(isMobileDevice);
+    if (typeof window !== "undefined") {
+      setHasMounted(true);
+      const width = window.innerWidth;
+      const lowEndDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      setIsMobile(width < 768 || lowEndDevice);
     }
   }, []);
   const formRef = useRef();
@@ -145,8 +146,7 @@ const Contact = () => {
         {/*<AvatarCanvas />*/}
 
         <div className="absolute bottom-0 right-0 w-[500px] h-[560px]">
-          {hasMounted ? (
-          isMobile ? (
+          {hasMounted && isMobile ? (
             <img
               src={fallbackImage_2}
               alt="3D model preview"
@@ -164,8 +164,7 @@ const Contact = () => {
               <AvatarCanvas />
             </Suspense>
           </ErrorBoundary>
-        )
-      ): null}
+        )}
         </div>
       </motion.div>
     </div>
