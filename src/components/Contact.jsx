@@ -8,20 +8,28 @@ import { EarthCanvas } from "./canvas";
 import ErrorBoundary from "./ErrorBoundary";
 import fallbackImage_2 from "../assets/arvr_kt.png";
 //import AvatarCanvas from "./canvas/AvatarCanvas";
-const AvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 
+let AvatarCanvas = null;
+
 const Contact = () => {
    const [isMobile, setIsMobile] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
+  const [shouldRender3D, setShouldRender3D] = useState(false);
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setHasMounted(true);
       const width = window.innerWidth;
-      const lowEndDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      setIsMobile(width < 768 || lowEndDevice);
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      setIsMobile(width < 768 || isMobileDevice);
+      if (!(width < 768 || isMobileDevice)) {
+        // Only import Avatar canvas on non-mobile
+        import("./canvas/AvatarCanvas").then((mod) => {
+          AvatarCanvas = mod.default;
+          setShouldRender3D(true);
+        });
+      }
     }
   }, []);
   const formRef = useRef();
@@ -146,11 +154,11 @@ const Contact = () => {
         {/*<AvatarCanvas />*/}
 
         <div className="absolute bottom-0 right-0 w-[500px] h-[560px]">
-          {hasMounted && isMobile ? (
+          {!shouldRender3D ? (
             <img
               src={fallbackImage_2}
               alt="3D model preview"
-              className="object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 w-[500px] h-[420px]"
+              className="object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 w-[500px] h-[420px] md:w-[1000px] md:h-[820px]"
             />
           ) : (
           <ErrorBoundary>

@@ -1,29 +1,34 @@
 import { motion } from "framer-motion";
 import { styles } from "../styles";
 import React, { useState, useEffect, Suspense } from "react";
-import ErrorBoundary from "./ErrorBoundary";
 import fallbackImage_1 from "../assets/kt_gdgc_photo.png";
+import ErrorBoundary from "./ErrorBoundary";
 
-const ARVREmbedCanvas = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
+let ARVREmbedCanvas = null;
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
+  const [shouldRender3D, setShouldRender3D] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setHasMounted(true);
       const width = window.innerWidth;
-      const lowEndDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      setIsMobile(width < 768 || lowEndDevice);
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      setIsMobile(width < 768 || isMobileDevice);
+
+      if (!(width < 768 || isMobileDevice)) {
+        // Only import AR/VR canvas on non-mobile
+        import("./canvas/ARVREmbedCanvas").then((mod) => {
+          ARVREmbedCanvas = mod.default;
+          setShouldRender3D(true);
+        });
+      }
     }
   }, []);
 
   return (
     <section className={`relative w-full h-screen mx-auto`}>
-      <div
-        className={`absolute inset-0 top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-row items-start gap-5`}
-      >
+      <div className={`absolute inset-0 top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-row items-start gap-5`}>
         <div className="flex flex-col justify-center items-center mt-5">
           <div className="w-5 h-5 rounded-full bg-[#915EFF]" />
           <div className="w-1 sm:h-80 h-40 violet-gradient" />
@@ -42,27 +47,20 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* 🔄 ARVR Canvas Background */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        {hasMounted && isMobile ? (
-            <img
-              src={fallbackImage_1}
-              alt="3D model preview"
-              className="w-full h-full object-contain opacity-90 mix-blend-screen"
-            />
-          ) : (
-            <ErrorBoundary>
-              <Suspense
-                fallback={
-                  <div className="text-white flex justify-center items-center h-full w-full">
-                    Loading 3D...
-                  </div>
-                }
-              >
-                <ARVREmbedCanvas />
-              </Suspense>
-            </ErrorBoundary>
-          )}
+        {!shouldRender3D ? (
+          <img
+            src={fallbackImage_1}
+            alt="3D model preview"
+            className="w-full h-full object-contain opacity-90 mix-blend-screen"
+          />
+        ) : (
+          <ErrorBoundary>
+            <Suspense fallback={<div className="text-white flex justify-center items-center h-full w-full">Loading 3D...</div>}>
+              <ARVREmbedCanvas />
+            </Suspense>
+          </ErrorBoundary>
+        )}
       </div>
 
       <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">
