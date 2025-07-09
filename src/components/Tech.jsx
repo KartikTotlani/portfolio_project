@@ -3,43 +3,35 @@ import { SectionWrapper } from "../hoc";
 import { technologies } from "../constants";
 import ErrorBoundary from "./ErrorBoundary";
 
-//let BallCanvas = null;
+// Lazy import moved to top-level — avoids dynamic injection after render
+const LazyBallCanvas = React.lazy(() => import("./canvas/Ball"));
 
 const Tech = () => {
   const [isMobile, setIsMobile] = useState(false);
-  //const [canRender3D, setCanRender3D] = useState(false);
-  const [BallCanvas, setBallCanvas] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      //const mobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-      //setIsMobile(mobile);
-      if (typeof window !== "undefined") {
-        const width = window.innerWidth;
-        const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
-          navigator.userAgent
-        );
-        const mobile = width < 768 || isMobileDevice;
-        setIsMobile(mobile);
+    setMounted(true);
 
-        // Only load 3D component if NOT mobile
-        if (!mobile) {
-          const Lazy3D = React.lazy(() => import("./canvas/Ball"));
-          setBallCanvas(() => Lazy3D); // function reference for rendering
-        }
-      }
+    if (typeof window !== "undefined") {
+      const width = window.innerWidth;
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const mobile = width < 768 || isMobileDevice;
+      setIsMobile(mobile);
     }
   }, []);
+
+  if (!mounted) return null; // Prevent hydration mismatch
 
   return (
     <div className="flex flex-row flex-wrap justify-center gap-10">
       {technologies.map((technology) => (
         <div className="w-28 h-28" key={technology.name}>
-          {BallCanvas ? (
+          {!isMobile ? (
             <ErrorBoundary>
-            <Suspense fallback={<div className="text-white">Loading...</div>}>
-              <BallCanvas icon={technology.icon} />
-            </Suspense>
+              <Suspense fallback={<div className="text-white">Loading...</div>}>
+                <LazyBallCanvas icon={technology.icon} />
+              </Suspense>
             </ErrorBoundary>
           ) : (
             <img

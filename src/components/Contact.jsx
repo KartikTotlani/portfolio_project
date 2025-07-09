@@ -1,49 +1,27 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
-import { Suspense } from "react";
-import { useEffect } from "react";
 import { styles } from "../styles";
-import { EarthCanvas } from "./canvas";
-import ErrorBoundary from "./ErrorBoundary";
 import fallbackImage_2 from "../assets/arvr_kt.png";
-//import AvatarCanvas from "./canvas/AvatarCanvas";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+import ErrorBoundary from "./ErrorBoundary";
 
-//let AvatarCanvas = null;
+// Top-level lazy import to avoid dynamic injection
+const LazyAvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 
 const Contact = () => {
   const [isMobile, setIsMobile] = useState(false);
-  //const [shouldRender3D, setShouldRender3D] = useState(false);
-  const [AvatarCanvas, setAvatarCanvas] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+
     if (typeof window !== "undefined") {
       const width = window.innerWidth;
-      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
-        navigator.userAgent
-      );
-      //setIsMobile(width < 768 || isMobileDevice);
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       const mobile = width < 768 || isMobileDevice;
       setIsMobile(mobile);
-
-      {
-        /*if (!(width < 768 || isMobileDevice)) {
-        // Only import Avatar canvas on non-mobile
-        import("./canvas/AvatarCanvas").then((mod) => {
-          AvatarCanvas = mod.default;
-          setShouldRender3D(true);
-        });
-      }
-    }
-  }, []);*/
-      }
-      // Only load 3D component if NOT mobile
-      if (!mobile) {
-        const Lazy3D = React.lazy(() => import("./canvas/AvatarCanvas"));
-        setAvatarCanvas(() => Lazy3D); // function reference for rendering
-      }
     }
   }, []);
 
@@ -57,13 +35,8 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { target } = e;
-    const { name, value } = target;
-
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -87,26 +60,20 @@ const Contact = () => {
         () => {
           setLoading(false);
           alert("Thank you. I will get back to you as soon as possible.");
-
-          setForm({
-            name: "",
-            email: "",
-            message: "",
-          });
+          setForm({ name: "", email: "", message: "" });
         },
         (error) => {
           setLoading(false);
           console.error(error);
-
           alert("Ahh, something went wrong. Please try again.");
         }
       );
   };
 
+  if (!mounted) return null; // Avoid hydration mismatch
+
   return (
-    <div
-      className={`xl:mt-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden`}
-    >
+    <div className="xl:mt-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden">
       <motion.div
         variants={slideIn("left", "tween", 0.2, 1)}
         className="flex-[0.75] bg-black-100 p-8 rounded-2xl"
@@ -166,32 +133,8 @@ const Contact = () => {
         variants={slideIn("right", "tween", 0.2, 1)}
         className="xl:flex-1 xl:h-auto md:h-[550px] h-[350px]"
       >
-        {/*<AvatarCanvas />*/}
-
-        {/*<div className="absolute bottom-0 right-0 w-[500px] h-[560px]">
-          {!shouldRender3D ? (
-            <img
-              src={fallbackImage_2}
-              alt="3D model preview"
-              className="object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 w-[500px] h-[420px] md:w-[1000px] md:h-[820px]"
-            />
-          ) : (
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <div className="text-white flex justify-center items-center h-full w-full">
-                  Loading 3D...
-                </div>
-              }
-            >
-              <AvatarCanvas />
-            </Suspense>
-          </ErrorBoundary>
-        )}
-        </div>*/}
-
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-          {AvatarCanvas ? (
+          {!isMobile ? (
             <ErrorBoundary>
               <Suspense
                 fallback={
@@ -200,7 +143,7 @@ const Contact = () => {
                   </div>
                 }
               >
-                <AvatarCanvas />
+                <LazyAvatarCanvas />
               </Suspense>
             </ErrorBoundary>
           ) : (

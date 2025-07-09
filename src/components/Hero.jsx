@@ -4,41 +4,24 @@ import React, { useState, useEffect, Suspense } from "react";
 import fallbackImage_1 from "../assets/kt_gdgc_photo.png";
 import ErrorBoundary from "./ErrorBoundary";
 
-//let ARVREmbedCanvas = null;
+const LazyARVREmbedCanvas = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(false);
-  //const [shouldRender3D, setShouldRender3D] = useState(false);
-  const [ARVREmbedCanvas, setARVREmbedCanvas] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+
     if (typeof window !== "undefined") {
       const width = window.innerWidth;
-      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
-        navigator.userAgent
-      );
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       const mobile = width < 768 || isMobileDevice;
       setIsMobile(mobile);
-
-      {
-        /*if (!(width < 768 || isMobileDevice)) {
-        // Only import AR/VR canvas on non-mobile
-        import("./canvas/ARVREmbedCanvas").then((mod) => {
-          ARVREmbedCanvas = mod.default;
-          setShouldRender3D(true);
-        });
-      }
-    }
-  }, []);*/
-      }
-
-      // Only load 3D component if NOT mobile
-      if (!mobile) {
-        const Lazy3D = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
-        setARVREmbedCanvas(() => Lazy3D); // function reference for rendering
-      }
     }
   }, []);
+
+  if (!mounted) return null; // Prevent hydration mismatch on SSR
 
   return (
     <section className={`relative w-full h-screen mx-auto`}>
@@ -63,30 +46,8 @@ const Hero = () => {
         </div>
       </div>
 
-      {/*<div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        {!shouldRender3D ? (
-          <img
-            src={fallbackImage_1}
-            alt="3D model preview"
-            className="w-full h-full object-contain opacity-90 mix-blend-screen"
-          />
-        ) : (
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <div className="text-white flex justify-center items-center h-full w-full">
-                  Loading 3D...
-                </div>
-              }
-            >
-              <ARVREmbedCanvas />
-            </Suspense>
-          </ErrorBoundary>
-        )}
-      </div>*/}
-
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
-        {ARVREmbedCanvas ? (
+        {!isMobile ? (
           <ErrorBoundary>
             <Suspense
               fallback={
@@ -95,7 +56,7 @@ const Hero = () => {
                 </div>
               }
             >
-              <ARVREmbedCanvas />
+              <LazyARVREmbedCanvas />
             </Suspense>
           </ErrorBoundary>
         ) : (
