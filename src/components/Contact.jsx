@@ -11,19 +11,25 @@ import fallbackImage_2 from "../assets/arvr_kt.png";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 
-let AvatarCanvas = null;
+//let AvatarCanvas = null;
 
 const Contact = () => {
-   const [isMobile, setIsMobile] = useState(false);
-  const [shouldRender3D, setShouldRender3D] = useState(false);
-
+  const [isMobile, setIsMobile] = useState(false);
+  //const [shouldRender3D, setShouldRender3D] = useState(false);
+  const [AvatarCanvas, setAvatarCanvas] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const width = window.innerWidth;
-      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      setIsMobile(width < 768 || isMobileDevice);
-      if (!(width < 768 || isMobileDevice)) {
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+      );
+      //setIsMobile(width < 768 || isMobileDevice);
+      const mobile = width < 768 || isMobileDevice;
+      setIsMobile(mobile);
+
+      {
+        /*if (!(width < 768 || isMobileDevice)) {
         // Only import Avatar canvas on non-mobile
         import("./canvas/AvatarCanvas").then((mod) => {
           AvatarCanvas = mod.default;
@@ -31,7 +37,16 @@ const Contact = () => {
         });
       }
     }
+  }, []);*/
+      }
+      // Only load 3D component if NOT mobile
+      if (!mobile) {
+        const Lazy3D = React.lazy(() => import("./canvas/AvatarCanvas"));
+        setAvatarCanvas(() => Lazy3D); // function reference for rendering
+      }
+    }
   }, []);
+
   const formRef = useRef();
   const [form, setForm] = useState({
     name: "",
@@ -153,7 +168,7 @@ const Contact = () => {
       >
         {/*<AvatarCanvas />*/}
 
-        <div className="absolute bottom-0 right-0 w-[500px] h-[560px]">
+        {/*<div className="absolute bottom-0 right-0 w-[500px] h-[560px]">
           {!shouldRender3D ? (
             <img
               src={fallbackImage_2}
@@ -173,6 +188,28 @@ const Contact = () => {
             </Suspense>
           </ErrorBoundary>
         )}
+        </div>*/}
+
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px]">
+          {AvatarCanvas ? (
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <div className="text-white flex justify-center items-center h-full w-full">
+                    Loading 3D...
+                  </div>
+                }
+              >
+                <AvatarCanvas />
+              </Suspense>
+            </ErrorBoundary>
+          ) : (
+            <img
+              src={fallbackImage_2}
+              alt="3D model preview"
+              className="object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 w-[500px] h-[420px] md:w-[1000px] md:h-[820px]"
+            />
+          )}
         </div>
       </motion.div>
     </div>
