@@ -15,6 +15,14 @@ const Contact = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+  window.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    console.error("WebGL context lost", e);
+    alert("WebGL context lost — try refreshing.");
+  });
+}, []);
+
+  useEffect(() => {
     setMounted(true);
 
     if (typeof window !== "undefined") {
