@@ -198,7 +198,7 @@ const testimonials = [
     name: "Harsha",
     designation: "Founder & CMO",
     company: "ARKA Productions",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
+    image: "https://randomuser.me/api/portraits/men/63.jpg",
   },
 ];
 

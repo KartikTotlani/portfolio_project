@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { styles } from "../styles";
-import fallbackImage_2 from "../assets/arvr_kt.png";
+import fallbackImage_2 from "../assets/kt_arvr_2.png";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 import ErrorBoundary from "./ErrorBoundary";
@@ -12,8 +12,7 @@ const LazyAvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 
 const Contact = () => {
   const formRef = useRef();
-
-
+  
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -21,7 +20,7 @@ const Contact = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  
+
   const [isMobile, setIsMobile] = useState(null);
   const [mounted, setMounted] = useState(false);
 
@@ -167,7 +166,7 @@ const Contact = () => {
             <img
               src={fallbackImage_2}
               alt="3D model preview"
-              className="object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 w-[500px] h-[420px] md:w-[1000px] md:h-[820px]"
+className="w-[370px] h-[380px] object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 sm:max-w-[700px] md:max-w-[800px] lg:max-w-[1000px]"
             />
           )}
         </div>

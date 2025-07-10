@@ -72,7 +72,7 @@ const Hero = () => {
           <img
             src={fallbackImage_1}
             alt="3D model preview"
-            className="w-full h-full object-contain opacity-90 mix-blend-screen"
+className="w-full max-w-[430px] h-auto object-contain opacity-90 mix-blend-screen absolute bottom-0 right-0 sm:max-w-[700px] md:max-w-[800px] lg:max-w-[1000px]"
           />
         )}
       </div>
