@@ -7,7 +7,7 @@ import ErrorBoundary from "./ErrorBoundary";
 const LazyBallCanvas = React.lazy(() => import("./canvas/Ball"));
 
 const Tech = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const Tech = () => {
     }
   }, []);
 
-  if (!mounted) return null; // Prevent hydration mismatch
+  if (!mounted || isMobile == null) return null; // Prevent hydration mismatch
 
   return (
     <div className="flex flex-row flex-wrap justify-center gap-10">

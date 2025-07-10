@@ -7,7 +7,7 @@ import ErrorBoundary from "./ErrorBoundary";
 const LazyARVREmbedCanvas = React.lazy(() => import("./canvas/ARVREmbedCanvas"));
 
 const Hero = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Hero = () => {
     }
   }, []);
 
-  if (!mounted) return null; // Prevent hydration mismatch on SSR
+  if (!mounted || isMobile == null) return null; // Prevent hydration mismatch on SSR
 
   return (
     <section className={`relative w-full h-screen mx-auto`}>

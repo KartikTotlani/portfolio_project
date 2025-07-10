@@ -11,7 +11,7 @@ import ErrorBoundary from "./ErrorBoundary";
 const LazyAvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 
 const Contact = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -32,6 +32,9 @@ const Contact = () => {
       setIsMobile(mobile);
     }
   }, []);
+
+  if (!mounted || isMobile === null) return null;
+
 
   const formRef = useRef();
   const [form, setForm] = useState({
