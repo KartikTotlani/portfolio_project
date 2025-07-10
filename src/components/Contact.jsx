@@ -11,16 +11,34 @@ import ErrorBoundary from "./ErrorBoundary";
 const LazyAvatarCanvas = React.lazy(() => import("./canvas/AvatarCanvas"));
 
 const Contact = () => {
+  const formRef = useRef();
+
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  
   const [isMobile, setIsMobile] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-  window.addEventListener('webglcontextlost', (e) => {
+  const handleWebGLContextLost = (e) => {
     e.preventDefault();
     console.error("WebGL context lost", e);
     alert("WebGL context lost — try refreshing.");
-  });
+  };
+
+  window.addEventListener("webglcontextlost", handleWebGLContextLost);
+
+  return () => {
+    window.removeEventListener("webglcontextlost", handleWebGLContextLost);
+  };
 }, []);
+
 
   useEffect(() => {
     setMounted(true);
@@ -34,16 +52,6 @@ const Contact = () => {
   }, []);
 
   if (!mounted || isMobile === null) return null;
-
-
-  const formRef = useRef();
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,8 +88,6 @@ const Contact = () => {
         }
       );
   };
-
-  if (!mounted) return null; // Avoid hydration mismatch
 
   return (
     <div className="xl:mt-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden">
