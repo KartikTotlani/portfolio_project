@@ -12,16 +12,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      if (scrollTop > 100) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -30,13 +24,12 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`${
-        styles.paddingX
-      } w-full flex items-center py-5 fixed top-0 z-20 ${
+      className={`${styles.paddingX} w-full flex items-center py-3 fixed top-0 z-50 ${
         scrolled ? "bg-primary" : "bg-transparent"
       }`}
     >
       <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
+        {/* LOGO + TEXT */}
         <Link
           to="/"
           className="flex items-center gap-2"
@@ -46,19 +39,18 @@ const Navbar = () => {
           }}
         >
           <img
-            src="/KT_sign.png"
+            src={KT_sign}
             alt="Kartik Totlani Signature"
-            className="w-36 h-auto object-contain"
+            className="w-[120px] h-auto object-contain sm:w-[140px]"
           />
-          <p className="text-white text-[25px] font-bold cursor-pointer flex ">
-            <span className="sm:block hidden"> 's</span>
-          </p>
-          <p className="text-white text-[35px] font-bold cursor-pointer flex ">
-            Portfolio &nbsp;
-            {/*<span className="sm:block hidden"> Portfolio</span>*/}
-          </p>
+
+          <div className="flex flex-col leading-tight sm:flex-row sm:items-center sm:gap-2">
+            <p className="text-white text-[20px] sm:text-[25px] font-bold">Portfolio</p>
+            <span className="hidden sm:block text-white text-[20px]">'s</span>
+          </div>
         </Link>
 
+        {/* DESKTOP NAV */}
         <ul className="list-none hidden sm:flex flex-row gap-10">
           {navLinks.map((nav) => (
             <li
@@ -71,8 +63,6 @@ const Navbar = () => {
               <a href={`#${nav.id}`}>{nav.title}</a>
             </li>
           ))}
-
-          {/* 🔽 CV Download Link */}
           <li>
             <a
               href={cvDownloadLink}
@@ -83,53 +73,51 @@ const Navbar = () => {
             >
               Download CV
             </a>
-          </li>          
+          </li>
         </ul>
 
- {/* Mobile menu */}
-        <div className="sm:hidden flex flex-1 justify-end items-center">
+        {/* MOBILE TOGGLE */}
+        <div className="sm:hidden flex items-center z-50">
           <img
             src={toggle ? close : menu}
             alt="menu"
-            className="w-[28px] h-[28px] object-contain"
+            className="w-7 h-7 object-contain cursor-pointer"
             onClick={() => setToggle(!toggle)}
           />
+        </div>
 
-          <div
-            className={`${
-              !toggle ? "hidden" : "flex"
-            } p-6 black-gradient absolute top-20 right-0 mx-4 my-2 min-w-[140px] z-10 rounded-xl`}
-          >
-            <ul className="list-none flex justify-end items-start flex-1 flex-col gap-4">
+        {/* MOBILE MENU */}
+        {toggle && (
+          <div className="sm:hidden absolute top-16 right-4 bg-primary p-6 rounded-xl shadow-md z-40">
+            <ul className="flex flex-col gap-4">
               {navLinks.map((nav) => (
                 <li
                   key={nav.id}
-                  className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                  className={`font-medium cursor-pointer text-[16px] ${
                     active === nav.title ? "text-white" : "text-secondary"
                   }`}
                   onClick={() => {
-                    setToggle(!toggle);
+                    setToggle(false);
                     setActive(nav.title);
                   }}
                 >
                   <a href={`#${nav.id}`}>{nav.title}</a>
                 </li>
               ))}
-              {/* 📱 CV Download in mobile menu */}
               <li>
                 <a
                   href={cvDownloadLink}
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-poppins font-medium cursor-pointer text-[16px] text-secondary hover:text-white"
+                  className="text-secondary hover:text-white text-[16px] font-medium cursor-pointer"
                 >
                   Download CV
                 </a>
               </li>
             </ul>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );
