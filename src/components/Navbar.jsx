@@ -20,7 +20,7 @@ const Navbar = () => {
   }, []);
 
   const cvDownloadLink =
-    "https://drive.google.com/uc?export=download&id=1vdrRJZDnxhL5SJbVlHObY0v3qrLNQDnV";
+  "https://drive.google.com/uc?export=download&id=1aiLf5_l8SuU5zyqjU0-Gb_hD4bzYFyFo";
 
   return (
     <nav
